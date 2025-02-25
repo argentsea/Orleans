@@ -28,7 +28,7 @@ namespace ArgentSea.Orleans
         /// <summary>
         /// This is both the database key in the configuration file and also the Orleans provider key.
         /// </summary>
-        public string DatabaseKey { get; set; } = string.Empty;
+        public string DatabaseKey { get; set; } = "Common";
 
         /// <summary>
         /// This is a dictionary of available CRUD queries for each grain type.

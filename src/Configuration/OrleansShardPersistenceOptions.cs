@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using Orleans.Providers;
 
 namespace ArgentSea.Orleans
 {
@@ -28,7 +29,7 @@ namespace ArgentSea.Orleans
         /// <summary>
         /// This is both the shard set key in the configuration file and also the Orleans provider key.
         /// </summary>
-        public string ShardSetKey { get; set; } = string.Empty;
+        public string ShardSetKey { get; set; } = ProviderConstants.DEFAULT_STORAGE_PROVIDER_NAME;
 
 
         /// <summary>

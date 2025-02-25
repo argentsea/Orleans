@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace ArgentSea.Orleans
 {
-    internal class ArgentSeaDbPersistenceOptionsValidator<TDatabaseOptions> : IConfigurationValidator where TDatabaseOptions : class, IDatabaseConfigurationOptions, new()
+    public class ArgentSeaDbPersistenceOptionsValidator<TDatabaseOptions> : IConfigurationValidator where TDatabaseOptions : class, IDatabaseConfigurationOptions, new()
     {
         private readonly OrleansDbPersistenceOptions options;
         private readonly string name;
