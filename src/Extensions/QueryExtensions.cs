@@ -1,4 +1,5 @@
 ﻿using ArgentSea;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ArgentSea.Orleans;
 
@@ -22,9 +23,21 @@ public static class QueryExtensions
     /// </summary>
     /// <param name="grainId"></param>
     /// <returns></returns>
-    public static Guid GetGuid(this GrainId grainId)
+    public static char Origin(this GrainId grainId)
     {
-        var shd = ShardKey<Guid>.FromUtf8(grainId.Key.Value.Span);
-        return shd.RecordId;
+        Span<byte> aValue = StringExtensions.Decode(grainId.Key.AsSpan());
+        var orgnLen = aValue[0] & 3;
+        return System.Text.Encoding.UTF8.GetString(aValue.Slice(1, orgnLen))[0];
     }
+
+    public static (char origin, short shardId) OriginAndShardId(this GrainId grainId)
+    {
+        Span<byte> aValue = StringExtensions.Decode(grainId.Key.AsSpan());
+        var orgnLen = aValue[0] & 3;
+        var origin = System.Text.Encoding.UTF8.GetString(aValue.Slice(1, orgnLen))[0];
+        var pos = orgnLen + 3;
+        var shardId = BitConverter.ToInt16(aValue.Slice(pos));
+        return (origin, shardId);
+    }
+
 }

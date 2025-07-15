@@ -1,9 +1,15 @@
 ﻿# ArgentSea Orleans Library
 
-![Build Status](https://dev.azure.com/musiq-org/ArgentSea/_apis/build/status/ArgentSea-Orleans)
+This library enables ArgentSea to server as a persistence provider for Microsoft Orleans.
 
-For a description of ArgentSea, please visit the the web page at http://www.argentsea.com.
+This is an abstract implementation. Currently, there is an implementation for SQL Server. Using the same pattern, one could easily be created for PostgreSQL. Because this is abstract, you need not reference this package directly.
 
-This library extends the ArgentSea framework to work as a persistence provider for Microsoft Orleans.
+## Contributions
 
-This repository uses the MIT license.
+Contributions are very welcome.
+
+## License
+
+[MIT.](https://opensource.org/licenses/MIT)
+
+

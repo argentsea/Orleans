@@ -9,14 +9,21 @@
     <Description>This library depends on the core ArgentSea library and provides extensions to allow it to provide storage services to Microsoft Orleans..</Description>
 	<Copyright>© John Hicks</Copyright>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Version>2.0.0</Version>
+	<Version>2.0.0-prerelease-2</Version>
+	<Title>ArgentSea core library for Microsoft Orleans persistence</Title>
   </PropertyGroup>
 
-  <ItemGroup>
+	<PropertyGroup>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+	<ItemGroup>
     <PackageReference Include="Microsoft.Orleans.Reminders" Version="9.1.2" />
     <PackageReference Include="Microsoft.Orleans.Runtime" Version="9.1.2" />
     <PackageReference Include="Microsoft.Orleans.Sdk" Version="9.1.2" />
-  </ItemGroup>
+	<None Include="readme.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\ArgentSea.Shared\src\ArgentSea.csproj" />
