@@ -37,16 +37,15 @@ namespace ArgentSea.Orleans
                 if (shdAttr is not null && shdAttr.IsRecordIdentifier && !isNullable && (isShardKey || isShardChild || isShardGrandChild || isShardGrandChild))
                 {
                     var expToSpan = Expression.Call(expROMemory, miSpan);
-                    var expShardCall = Expression.Call(propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public)!, expToSpan);
-
+                    //var expShardCall = Expression.Call(propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public)!, expToSpan);
+                    var expShardNew = Expression.New(propType.GetConstructor( [ typeof(ReadOnlySpan<byte>)] )!, [expToSpan]);
                     var expShardKey = Expression.Variable(propType, "shardKey");
                     variables.Add(expShardKey);
-                    expressions.Add(Expression.Assign(expShardKey, expShardCall));
+                    expressions.Add(Expression.Assign(expShardKey, expShardNew));
                     var miGetShardId = propType.GetProperty(nameof(ShardKey<int>.ShardId), BindingFlags.Public | BindingFlags.Instance)!.GetGetMethod();
                     var expShardId = Expression.Call(expShardKey, miGetShardId!);
 
                     expressions.Add(Expression.Assign(expIgnoreParameters, Expression.New(typeof(HashSet<string>))));
-                    Expression.Assign(expShardKey, expShardCall);
 
                     var foundPrms = false;
                     var found = ExpressionHelpers.ShardKeyInMapProperties(prop, propType, shdAttr, isNullable, isShardKey, isShardChild, isShardGrandChild, isShardGreatGrandChild, expShardKey, expressions, variables, expPrms, expIgnoreParameters, expLogger, new HashSet<string>(), miLogTrace, ref foundPrms, logger);
@@ -68,16 +67,16 @@ namespace ArgentSea.Orleans
                 if (shdAttr is not null && !isNullable && (isShardKey || isShardChild || isShardGrandChild || isShardGrandChild))
                 {
                     var expToSpan = Expression.Call(expROMemory, miSpan);
-                    var expShardCall = Expression.Call(propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public)!, expToSpan);
+                    //var expShardCall = Expression.Call(propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public)!, expToSpan);
+                    var expShardNew = Expression.New(propType.GetConstructor([typeof(ReadOnlySpan<byte>)])!, [expToSpan]);
                     var expShardKey = Expression.Variable(propType, "shardKey");
                     variables.Add(expShardKey);
 
-                    expressions.Add(Expression.Assign(expShardKey, expShardCall));
+                    expressions.Add(Expression.Assign(expShardKey, expShardNew));
                     var miGetShardId = propType.GetProperty(nameof(ShardKey<int>.ShardId), BindingFlags.Public | BindingFlags.Instance)!.GetGetMethod();
                     var expShardId = Expression.Call(expShardKey, miGetShardId!);
 
                     expressions.Add(Expression.Assign(expIgnoreParameters, Expression.New(typeof(HashSet<string>))));
-                    Expression.Assign(expShardKey, expShardCall);
 
                     var foundPrms = false;
                     var found = ExpressionHelpers.ShardKeyInMapProperties(prop, propType, shdAttr, isNullable, isShardKey, isShardChild, isShardGrandChild, isShardGreatGrandChild, expShardKey, expressions, variables, expPrms, expIgnoreParameters, expLogger, new HashSet<string>(), miLogTrace, ref foundPrms, logger);
@@ -114,8 +113,7 @@ namespace ArgentSea.Orleans
                 if (shdAttr is not null && shdAttr.IsRecordIdentifier && !isNullable && (isShardKey || isShardChild || isShardGrandChild || isShardGrandChild))
                 {
                     var expProp = Expression.Property(expModel, prop);
-                    var miFromUtf8 = propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public, [typeof(ReadOnlySpan<byte>)])!;
-                    var expNewShardKey = Expression.Call(miFromUtf8, [Expression.Call(expROMemory, miSpan) ]);
+                    var expNewShardKey = Expression.New(propType.GetConstructor([typeof(ReadOnlySpan<byte>)])!, [Expression.Call(expROMemory, miSpan)]);
                     expressions.Add(Expression.Assign(expProp, expNewShardKey));
                     var block = Expression.Block(expressions);
                     var lmbKey = Expression.Lambda<Action<ReadOnlyMemory<byte>, TModel, ILogger?>>(block, exprInPrms);
@@ -132,8 +130,7 @@ namespace ArgentSea.Orleans
                 if (shdAttr is not null && !isNullable && (isShardKey || isShardChild || isShardGrandChild || isShardGrandChild))
                 {
                     var expProp = Expression.Property(expModel, prop);
-                    var miFromUtf8 = propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public, [typeof(ReadOnlySpan<byte>)])!;
-                    var expNewShardKey = Expression.Call(miFromUtf8, [ Expression.Call(expROMemory, miSpan) ]);
+                    var expNewShardKey = Expression.New(propType.GetConstructor([typeof(ReadOnlySpan<byte>)])!, [Expression.Call(expROMemory, miSpan)]);
                     expressions.Add(Expression.Assign(expProp, expNewShardKey));
                     var block = Expression.Block(expressions);
                     var lmbKey = Expression.Lambda<Action<ReadOnlyMemory<byte>, TModel, ILogger?>>(block, exprInPrms);
@@ -222,8 +219,9 @@ namespace ArgentSea.Orleans
                     if (validateKey)
                     {
                         var expToSpan = Expression.Call(expROMemory, miSpan);
-                        var expGrainIdShard = Expression.Call(propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public)!, expToSpan);
-                        var expValid = Expression.IfThen(Expression.NotEqual(expShardKey, expGrainIdShard),
+                        //var expGrainIdShard = Expression.Call(propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public)!, expToSpan);
+                        var expShardNew = Expression.New(propType.GetConstructor([typeof(ReadOnlySpan<byte>)])!, [expToSpan]);
+                        var expValid = Expression.IfThen(Expression.NotEqual(expShardKey, expShardNew),
                             Expression.Throw(Expression.New(typeof(OrleansIdKeyMismatchException).GetConstructor([typeof(string)])!, [Expression.Constant(grainType)])));
                         expressions.Add(expValid);
                     }
@@ -247,8 +245,9 @@ namespace ArgentSea.Orleans
                     if (validateKey)
                     {
                         var expToSpan = Expression.Call(expROMemory, miSpan);
-                        var expGrainIdShard = Expression.Call(propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public)!, expToSpan);
-                        var expValid = Expression.IfThen(Expression.NotEqual(expShardKey, expGrainIdShard),
+                        //var expGrainIdShard = Expression.Call(propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public)!, expToSpan);
+                        var expShardNew = Expression.New(propType.GetConstructor([typeof(ReadOnlySpan<byte>)])!, [expToSpan]);
+                        var expValid = Expression.IfThen(Expression.NotEqual(expShardKey, expShardNew),
                             Expression.Throw(Expression.New(typeof(OrleansIdKeyMismatchException).GetConstructor([typeof(string)])!, [Expression.Constant(grainType)])));
                         expressions.Add(expValid);
                     }
@@ -296,8 +295,9 @@ namespace ArgentSea.Orleans
                     if (validateKey)
                     {
                         var expToSpan = Expression.Call(expROMemory, miSpan);
-                        var expGrainIdShard = Expression.Call(propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public)!, expToSpan);
-                        var expValid = Expression.IfThen(Expression.NotEqual(expShardKey, expGrainIdShard),
+                        //var expGrainIdShard = Expression.Call(propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public)!, expToSpan);
+                        var expShardNew = Expression.New(propType.GetConstructor([typeof(ReadOnlySpan<byte>)])!, [expToSpan]);
+                        var expValid = Expression.IfThen(Expression.NotEqual(expShardKey, expShardNew),
                             Expression.Throw(Expression.New(typeof(OrleansIdKeyMismatchException).GetConstructor([typeof(string)])!, [Expression.Constant(grainType)])));
                         expressions.Add(expValid);
                     }
@@ -329,8 +329,9 @@ namespace ArgentSea.Orleans
                     if (validateKey)
                     {
                         var expToSpan = Expression.Call(expROMemory, miSpan);
-                        var expGrainIdShard = Expression.Call(propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public)!, expToSpan);
-                        var expValid = Expression.IfThen(Expression.NotEqual(expShardKey, expGrainIdShard),
+                        //var expGrainIdShard = Expression.Call(propType.GetMethod(nameof(ShardKey<int>.FromUtf8), BindingFlags.Static | BindingFlags.Public)!, expToSpan);
+                        var expShardNew = Expression.New(propType.GetConstructor([typeof(ReadOnlySpan<byte>)])!, [expToSpan]);
+                        var expValid = Expression.IfThen(Expression.NotEqual(expShardKey, expShardNew),
                             Expression.Throw(Expression.New(typeof(OrleansIdKeyMismatchException).GetConstructor([typeof(string)])!, [Expression.Constant(grainType)])));
                         expressions.Add(expValid);
                     }

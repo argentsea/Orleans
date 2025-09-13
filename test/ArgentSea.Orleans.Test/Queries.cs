@@ -13,7 +13,7 @@ namespace ArgentSea.Orleans.Test
 
         public static QueryProcedure ClearSubscriber => new QueryProcedure("ws.ClearSubscriberV1", new[] { "SubscriberKey" });
 
-        internal static OrleansShardQueryDefinitions SubscriberQueries = new("SubscriberGrain", 's', GetSubscriber, QueryResultFormat.ResultSet, _writeSubscriber, ClearSubscriber);
+        internal static OrleansShardQueryDefinitions SubscriberQueries = new("SubscriberGrain", GetSubscriber, QueryResultFormat.ResultSet, _writeSubscriber, ClearSubscriber);
 
 
         // Example Product Queries
@@ -24,7 +24,7 @@ namespace ArgentSea.Orleans.Test
 
         public static QueryProcedure ClearProduct => new QueryProcedure("ws.ClearProductV1", new[] { "ProductKey" });
 
-        internal static OrleansShardQueryDefinitions ProductQueries = new("ProductGrain", 's', GetProduct, QueryResultFormat.ResultSet, _writeProduct, ClearProduct);
+        internal static OrleansShardQueryDefinitions ProductQueries = new("ProductGrain", GetProduct, QueryResultFormat.ResultSet, _writeProduct, ClearProduct);
 
         // Example User Queries
         public static QueryProcedure GetUser => new QueryProcedure("ws.ReadUserV1", new[] { "userid" });

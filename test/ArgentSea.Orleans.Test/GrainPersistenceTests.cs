@@ -38,21 +38,21 @@ namespace ArgentSea.Orleans.Test
 
         private class TestShardModel
         {
-            [MapSqlShardKey("DataShard", 'x', "DataRecordId")]
+            [MapSqlShardKey("DataShard", "DataRecordId")]
             [MapToSqlInt("DataRecordId")]
             public ShardKey<int>? RecordKey { get; set; } = ShardKey<int>.Empty;
 
-            [MapSqlShardKey("ChildShard", 'y', "ParentRecordId", "ChildRecordId", true)]
+            [MapSqlShardKey("ChildShard", "ParentRecordId", "ChildRecordId")]
             [MapToSqlInt("ParentRecordId")]
             [MapToSqlSmallInt("ChildRecordId")]
-            public ShardKey<int, short> RecordChild { get; set; } = new ShardKey<int, short>('A', 3, 123, 4321);
+            public ShardKey<int, short> RecordChild { get; set; } = new ShardKey<int, short>(3, 123, 4321);
 
 
-            [MapSqlShardKey('A', "@DataRecordId2")]
+            [MapSqlShardKey("@DataRecordId2")]
             [MapToSqlBigInt("@DataRecordId2")]
             public ShardKey<long> DataShard2 { get; set; } = ShardKey<long>.Empty; 
 
-            [MapSqlShardKey("ChildShard2", 'B', "ParentRecord2Id", "ChildRecord2Id")]
+            [MapSqlShardKey("ChildShard2", "ParentRecord2Id", "ChildRecord2Id")]
             [MapToSqlSmallInt("ParentRecord2Id")]
             [MapToSqlNVarChar("ChildRecord2Id", 255)]
             public ShardKey<short, string>? ChildShard2 { get; set; } = null;
@@ -76,21 +76,21 @@ namespace ArgentSea.Orleans.Test
 
         private class TestShardModel2 // this time without the isRecordIdentifier flag set
         {
-            [MapSqlShardKey("DataShard", 'x', "DataRecordId")]
+            [MapSqlShardKey("DataShard", "DataRecordId")]
             [MapToSqlInt("DataRecordId")]
             public ShardKey<int>? RecordKey { get; set; } = ShardKey<int>.Empty;
 
-            [MapSqlShardKey("ChildShard", 'y', "ParentRecordId", "ChildRecordId")]
+            [MapSqlShardKey("ChildShard","ParentRecordId", "ChildRecordId")]
             [MapToSqlInt("ParentRecordId")]
             [MapToSqlSmallInt("ChildRecordId")]
-            public ShardKey<int, short> RecordChild { get; set; } = new ShardKey<int, short>('A', 3, 123, 4321);
+            public ShardKey<int, short> RecordChild { get; set; } = new ShardKey<int, short>(3, 123, 4321);
 
 
-            [MapSqlShardKey('A', "@DataRecordId2")]
+            [MapSqlShardKey("@DataRecordId2")]
             [MapToSqlBigInt("@DataRecordId2")]
             public ShardKey<long> DataShard2 { get; set; } = ShardKey<long>.Empty;
 
-            [MapSqlShardKey("ChildShard2", 'B', "ParentRecord2Id", "ChildRecord2Id")]
+            [MapSqlShardKey("ChildShard2", "ParentRecord2Id", "ChildRecord2Id")]
             [MapToSqlSmallInt("ParentRecord2Id")]
             [MapToSqlNVarChar("ChildRecord2Id", 255)]
             public ShardKey<short, string>? ChildShard2 { get; set; } = null;
@@ -151,7 +151,7 @@ namespace ArgentSea.Orleans.Test
         [Fact]
         public void TestSetShardKeyLambda()
         {
-            var shd = new ShardKey<int, short>('A', 3, 123, 4321); // new ShardKey<int, short>('y', 1, 5678, 9876);
+            var shd = new ShardKey<int, short>(3, 123, 4321); // new ShardKey<int, short>('y', 1, 5678, 9876);
             var utf8Shard = shd.ToUtf8();
             var lmbaSetShard = OrleansExpressionHelper.BuildSetShardLambda<TestShardModel>("test", new DebugLogger());
             var model = new TestShardModel();
@@ -164,7 +164,7 @@ namespace ArgentSea.Orleans.Test
         {
             var lmbaRead = OrleansExpressionHelper.BuildShardReadLambda<TestShardModel>("test", new DebugLogger());
             var lmbaSetShard = OrleansExpressionHelper.BuildSetShardLambda<TestShardModel>("test", new DebugLogger());
-            var utf8Shard = new ShardKey<int, short>('y', 1, 5678, 9876).ToUtf8();
+            var utf8Shard = new ShardKey<int, short>(1, 5678, 9876).ToUtf8();
 
             //var rom = new ReadOnlyMemory<byte>(shd.ToArray());
             var prms = new ParameterCollection();
@@ -182,7 +182,7 @@ namespace ArgentSea.Orleans.Test
             var lmbaWriteValid = OrleansExpressionHelper.BuildShardWriteLambda<TestShardModel>("test", true);
 
             var model = new TestShardModel();
-            var shardId = lmbaWrite(new ReadOnlyMemory<byte>(model.RecordChild.ToArray()), model);
+            var shardId = lmbaWrite(model.RecordChild.ToArray(), model);
             shardId.Should().Be(model.RecordChild.ShardId);
 
             var shardId2 = lmbaWriteValid(new ReadOnlyMemory<byte>(model.RecordChild.ToUtf8().ToArray()), model);
@@ -198,8 +198,8 @@ namespace ArgentSea.Orleans.Test
             var model = new TestShardModel();
             var prms = new ParameterCollection();
 
-            model.RecordChild = new ShardKey<int, short>('y', 1, 456, 432);
-            var shardId = lmbaClear(new ReadOnlyMemory<byte>(model.RecordChild.ToArray()), model, prms, new DebugLogger());
+            model.RecordChild = new ShardKey<int, short>(1, 456, 432);
+            var shardId = lmbaClear(model.RecordChild.ToArray(), model, prms, new DebugLogger());
             shardId.Should().Be(model.RecordChild.ShardId);
             prms.Count.Should().Be(3);
             prms["@ChildShard"].Value.Should().Be(1);
@@ -208,8 +208,8 @@ namespace ArgentSea.Orleans.Test
 
             var model2 = new TestShardModel();
             var prms2 = new ParameterCollection();
-            model2.RecordChild = new ShardKey<int, short>('y', 2, 765, 321);
-            var shardId2 = lmbaClear(new ReadOnlyMemory<byte>(model2.RecordChild.ToArray()), model2, prms2, new DebugLogger());
+            model2.RecordChild = new ShardKey<int, short>(2, 765, 321);
+            var shardId2 = lmbaClear(model2.RecordChild.ToArray(), model2, prms2, new DebugLogger());
             shardId2.Should().Be(model2.RecordChild.ShardId);
             prms2.Count.Should().Be(3);
             prms2["@ChildShard"].Value.Should().Be(2);
@@ -221,7 +221,7 @@ namespace ArgentSea.Orleans.Test
         [Fact]
         public void TestSetShardKeyLambdaNoRecordId()
         {
-            var shd = new ShardKey<int, short>('A', 3, 123, 4321); // new ShardKey<int, short>('y', 1, 5678, 9876);
+            var shd = new ShardKey<int, short>(3, 123, 4321); // new ShardKey<int, short>('y', 1, 5678, 9876);
             var utf8Shard = shd.ToUtf8();
             var lmbaSetShard = OrleansExpressionHelper.BuildSetShardLambda<TestShardModel2>("test", new DebugLogger());
             var model = new TestShardModel2();
@@ -234,7 +234,7 @@ namespace ArgentSea.Orleans.Test
         {
             var lmbaRead = OrleansExpressionHelper.BuildShardReadLambda<TestShardModel2>("test", new DebugLogger());
             var lmbaSetShard = OrleansExpressionHelper.BuildSetShardLambda<TestShardModel2>("test", new DebugLogger());
-            var utf8Shard = new ShardKey<int, short>('y', 1, 5678, 9876).ToUtf8();
+            var utf8Shard = new ShardKey<int, short>(1, 5678, 9876).ToUtf8();
 
             //var rom = new ReadOnlyMemory<byte>(shd.ToArray());
             var prms = new ParameterCollection();
@@ -252,7 +252,7 @@ namespace ArgentSea.Orleans.Test
             var lmbaWriteValid = OrleansExpressionHelper.BuildShardWriteLambda<TestShardModel2>("test", true);
 
             var model = new TestShardModel2();
-            var shardId = lmbaWrite(new ReadOnlyMemory<byte>(model.RecordChild.ToArray()), model);
+            var shardId = lmbaWrite(model.RecordChild.ToArray(), model);
             shardId.Should().Be(model.RecordChild.ShardId);
 
             var shardId2 = lmbaWriteValid(new ReadOnlyMemory<byte>(model.RecordChild.ToUtf8().ToArray()), model);
@@ -268,8 +268,8 @@ namespace ArgentSea.Orleans.Test
             var model = new TestShardModel2();
             var prms = new ParameterCollection();
 
-            model.RecordChild = new ShardKey<int, short>('y', 1, 456, 432);
-            var shardId = lmbaClear(new ReadOnlyMemory<byte>(model.RecordChild.ToArray()), model, prms, new DebugLogger());
+            model.RecordChild = new ShardKey<int, short>(1, 456, 432);
+            var shardId = lmbaClear(model.RecordChild.ToArray(), model, prms, new DebugLogger());
             shardId.Should().Be(model.RecordChild.ShardId);
             prms.Count.Should().Be(3);
             prms["@ChildShard"].Value.Should().Be(1);
@@ -278,8 +278,8 @@ namespace ArgentSea.Orleans.Test
 
             var model2 = new TestShardModel2();
             var prms2 = new ParameterCollection();
-            model2.RecordChild = new ShardKey<int, short>('y', 2, 765, 321);
-            var shardId2 = lmbaClear(new ReadOnlyMemory<byte>(model2.RecordChild.ToArray()), model2, prms2, new DebugLogger());
+            model2.RecordChild = new ShardKey<int, short>(2, 765, 321);
+            var shardId2 = lmbaClear(model2.RecordChild.ToArray(), model2, prms2, new DebugLogger());
             shardId2.Should().Be(model2.RecordChild.ShardId);
             prms2.Count.Should().Be(3);
             prms2["@ChildShard"].Value.Should().Be(2);

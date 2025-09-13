@@ -172,14 +172,10 @@ namespace ArgentSea.Orleans
         private readonly QueryProcedure? clearQuery;
         private readonly Lazy<QueryStatement>? lazyClearQuery;
 
-        //private readonly ParameterMapAttributeBase? concurrency = null;
-        private readonly char origin;
-
         #region Constructors
-        public OrleansShardQueryDefinitions(string grainType, char origin, QueryProcedure readQuery, QueryResultFormat resultType, QueryProcedure writeQuery, QueryProcedure cleardQuery)
+        public OrleansShardQueryDefinitions(string grainType, QueryProcedure readQuery, QueryResultFormat resultType, QueryProcedure writeQuery, QueryProcedure cleardQuery)
         {
             this.grainType = grainType;
-            this.origin = origin;
             this.readQuery = readQuery;
             this.resultType = resultType;
             this.writeQuery = writeQuery;
@@ -189,10 +185,9 @@ namespace ArgentSea.Orleans
             this.lazyClearQuery = null;
         }
 
-        public OrleansShardQueryDefinitions(string grainType, char origin, Lazy<QueryStatement> readQuery, QueryResultFormat resultType, QueryProcedure writeQuery, QueryProcedure cleardQuery)
+        public OrleansShardQueryDefinitions(string grainType, Lazy<QueryStatement> readQuery, QueryResultFormat resultType, QueryProcedure writeQuery, QueryProcedure cleardQuery)
         {
             this.grainType = grainType;
-            this.origin = origin;
             this.readQuery = null;
             this.resultType = resultType;
             this.writeQuery = writeQuery;
@@ -202,10 +197,9 @@ namespace ArgentSea.Orleans
             this.lazyClearQuery = null;
         }
 
-        public OrleansShardQueryDefinitions(string grainType, char origin, QueryProcedure readQuery, QueryResultFormat resultType, Lazy<QueryStatement> writeQuery, QueryProcedure cleardQuery)
+        public OrleansShardQueryDefinitions(string grainType, QueryProcedure readQuery, QueryResultFormat resultType, Lazy<QueryStatement> writeQuery, QueryProcedure cleardQuery)
         {
             this.grainType = grainType;
-            this.origin = origin;
             this.readQuery = readQuery;
             this.resultType = resultType;
             this.writeQuery = null;
@@ -215,10 +209,9 @@ namespace ArgentSea.Orleans
             this.lazyClearQuery = null;
         }
 
-        public OrleansShardQueryDefinitions(string grainType, char origin, Lazy<QueryStatement> readQuery, QueryResultFormat resultType, Lazy<QueryStatement> writeQuery, QueryProcedure cleardQuery)
+        public OrleansShardQueryDefinitions(string grainType, Lazy<QueryStatement> readQuery, QueryResultFormat resultType, Lazy<QueryStatement> writeQuery, QueryProcedure cleardQuery)
         {
             this.grainType = grainType;
-            this.origin = origin;
             this.readQuery = null;
             this.resultType = resultType;
             this.writeQuery = null;
@@ -229,10 +222,9 @@ namespace ArgentSea.Orleans
         }
 
 
-        public OrleansShardQueryDefinitions(string grainType, char origin, QueryProcedure readQuery, QueryResultFormat resultType, QueryProcedure writeQuery, Lazy<QueryStatement> cleardQuery)
+        public OrleansShardQueryDefinitions(string grainType, QueryProcedure readQuery, QueryResultFormat resultType, QueryProcedure writeQuery, Lazy<QueryStatement> cleardQuery)
         {
             this.grainType = grainType;
-            this.origin = origin;
             this.readQuery = readQuery;
             this.resultType = resultType;
             this.writeQuery = writeQuery;
@@ -241,10 +233,9 @@ namespace ArgentSea.Orleans
             this.lazyWriteQuery = null;
             this.lazyClearQuery = cleardQuery;
         }
-        public OrleansShardQueryDefinitions(string grainType, char origin, Lazy<QueryStatement> readQuery, QueryResultFormat resultType, QueryProcedure writeQuery, Lazy<QueryStatement> cleardQuery)
+        public OrleansShardQueryDefinitions(string grainType, Lazy<QueryStatement> readQuery, QueryResultFormat resultType, QueryProcedure writeQuery, Lazy<QueryStatement> cleardQuery)
         {
             this.grainType = grainType;
-            this.origin = origin;
             this.readQuery = null;
             this.resultType = resultType;
             this.writeQuery = writeQuery;
@@ -254,10 +245,9 @@ namespace ArgentSea.Orleans
             this.lazyClearQuery = cleardQuery;
         }
 
-        public OrleansShardQueryDefinitions(string grainType, char origin, QueryProcedure readQuery, QueryResultFormat resultType, Lazy<QueryStatement> writeQuery, Lazy<QueryStatement> cleardQuery)
+        public OrleansShardQueryDefinitions(string grainType, QueryProcedure readQuery, QueryResultFormat resultType, Lazy<QueryStatement> writeQuery, Lazy<QueryStatement> cleardQuery)
         {
             this.grainType = grainType;
-            this.origin = origin;
             this.readQuery = readQuery;
             this.resultType = resultType;
             this.writeQuery = null;
@@ -267,10 +257,9 @@ namespace ArgentSea.Orleans
             this.lazyClearQuery = cleardQuery;
         }
 
-        public OrleansShardQueryDefinitions(string grainType, char origin, Lazy<QueryStatement> readQuery, QueryResultFormat resultType, Lazy<QueryStatement> writeQuery, Lazy<QueryStatement> cleardQuery)
+        public OrleansShardQueryDefinitions(string grainType, Lazy<QueryStatement> readQuery, QueryResultFormat resultType, Lazy<QueryStatement> writeQuery, Lazy<QueryStatement> cleardQuery)
         {
             this.grainType = grainType;
-            this.origin = origin;
             this.readQuery = null;
             this.resultType = resultType;
             this.writeQuery = null;
@@ -299,9 +288,5 @@ namespace ArgentSea.Orleans
         public string GrainType { get => this.grainType; }
 
         public QueryResultFormat ResultFormat { get => this.resultType; }
-
-        //public ParameterMapAttributeBase? Concurrency { get => this.concurrency; }
-
-        public char Origin { get => this.origin; }
     }
 }

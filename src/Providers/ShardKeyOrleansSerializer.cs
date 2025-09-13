@@ -17,7 +17,7 @@ public class ShardKeyOrleansSerializer<T> : IFieldCodec<ShardKey<T>>, IDeepCopie
 {
     public ShardKey<T> DeepCopy(ShardKey<T> input, CopyContext context)
     {
-        return new ShardKey<T>(input.ToArray());
+        return new ShardKey<T>(input.ToArray().Span);
     }
 
     public ShardKey<T> ReadValue<TInput>(ref Reader<TInput> reader, Field field)
@@ -46,7 +46,7 @@ public class ShardKeyOrleansSerializer<T> : IFieldCodec<ShardKey<T>>, IDeepCopie
         writer.WriteFieldHeader(fieldIdDelta, expectedType, typeof(ShardKey<T>), WireType.LengthPrefixed);
         var bytes = value.ToArray();
         writer.WriteByte((byte)bytes.Length);
-        writer.Write(bytes);
+        writer.Write(bytes.Span);
     }
 }
 
@@ -54,7 +54,7 @@ public class ShardKeyOrleansSerializer<TShard, TChild> : IFieldCodec<ShardKey<TS
 {
     public ShardKey<TShard, TChild> DeepCopy(ShardKey<TShard, TChild> input, CopyContext context)
     {
-        return new ShardKey<TShard, TChild>(input.ToArray());
+        return new ShardKey<TShard, TChild>(input.ToArray().Span);
     }
 
     public ShardKey<TShard, TChild> ReadValue<TInput>(ref Reader<TInput> reader, Field field)
@@ -83,7 +83,7 @@ public class ShardKeyOrleansSerializer<TShard, TChild> : IFieldCodec<ShardKey<TS
         writer.WriteFieldHeader(fieldIdDelta, expectedType, typeof(ShardKey<TShard, TChild>), WireType.LengthPrefixed);
         var bytes = value.ToArray();
         writer.WriteByte((byte)bytes.Length);
-        writer.Write(bytes);
+        writer.Write(bytes.Span);
     }
 }
 
@@ -91,7 +91,7 @@ public class ShardKeyOrleansSerializer<TShard, TChild, TGrandChild> : IFieldCode
 {
     public ShardKey<TShard, TChild, TGrandChild> DeepCopy(ShardKey<TShard, TChild, TGrandChild> input, CopyContext context)
     {
-        return new ShardKey<TShard, TChild, TGrandChild>(input.ToArray());
+        return new ShardKey<TShard, TChild, TGrandChild>(input.ToArray().Span);
     }
 
     public ShardKey<TShard, TChild, TGrandChild> ReadValue<TInput>(ref Reader<TInput> reader, Field field)
@@ -120,7 +120,7 @@ public class ShardKeyOrleansSerializer<TShard, TChild, TGrandChild> : IFieldCode
         writer.WriteFieldHeader(fieldIdDelta, expectedType, typeof(ShardKey<TShard, TChild, TGrandChild>), WireType.LengthPrefixed);
         var bytes = value.ToArray();
         writer.WriteByte((byte)bytes.Length);
-        writer.Write(bytes);
+        writer.Write(bytes.Span);
     }
 }
 
@@ -128,7 +128,7 @@ public class ShardKeyOrleansSerializer<TShard, TChild, TGrandChild, TGreatGrandC
 {
     public ShardKey<TShard, TChild, TGrandChild, TGreatGrandChild> DeepCopy(ShardKey<TShard, TChild, TGrandChild, TGreatGrandChild> input, CopyContext context)
     {
-        return new ShardKey<TShard, TChild, TGrandChild, TGreatGrandChild>(input.ToArray());
+        return new ShardKey<TShard, TChild, TGrandChild, TGreatGrandChild>(input.ToArray().Span);
     }
 
     public ShardKey<TShard, TChild, TGrandChild, TGreatGrandChild> ReadValue<TInput>(ref Reader<TInput> reader, Field field)
@@ -157,6 +157,6 @@ public class ShardKeyOrleansSerializer<TShard, TChild, TGrandChild, TGreatGrandC
         writer.WriteFieldHeader(fieldIdDelta, expectedType, typeof(ShardKey<TShard, TChild, TGrandChild, TGreatGrandChild>), WireType.LengthPrefixed);
         var bytes = value.ToArray();
         writer.WriteByte((byte)bytes.Length);
-        writer.Write(bytes);
+        writer.Write(bytes.Span);
     }
 }
