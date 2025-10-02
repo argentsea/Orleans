@@ -1,14 +1,9 @@
 ﻿// © John Hicks. All rights reserved. Licensed under the MIT license.
 // See the LICENSE file in the repository root for more information.
 
+using Microsoft.Extensions.Options;
+using Orleans.Serialization;
 using Orleans.Storage;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Concurrent;
 
 namespace ArgentSea.Orleans
 {
@@ -33,13 +28,18 @@ namespace ArgentSea.Orleans
         /// <summary>
         /// This is a dictionary of available CRUD queries for each grain type.
         /// </summary>
-        public readonly Dictionary<string, OrleansDbQueryDefinitions> Queries = [];
+        public Dictionary<string, OrleansDbQueryDefinitions> Queries = [];
 
 
         /// <summary>
         /// This is not used but is required by the Orleans interface.
         /// </summary>
-        public IGrainStorageSerializer GrainStorageSerializer { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        IGrainStorageSerializer IStorageProviderSerializerOptions.GrainStorageSerializer { get; set; } =
+            new JsonGrainStorageSerializer(
+                new OrleansJsonSerializer(
+                    Options.Create(new OrleansJsonSerializerOptions())
+                )
+            );
 
 
         /// <summary>
