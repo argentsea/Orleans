@@ -1,7 +1,4 @@
-﻿using ArgentSea;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace ArgentSea.Orleans;
+﻿namespace ArgentSea.Orleans;
 
 public static class QueryExtensions
 {
@@ -14,7 +11,12 @@ public static class QueryExtensions
     {
         Span<byte> aValue = StringExtensions.Decode(grainId.Key.AsSpan()).ToArray();
         var orgnLen = aValue[0] & 3;
-        var pos = orgnLen + 3;
+
+        // Changed from + 3 to + 1 to get the right ShardId
+        // Not sure if the expected byte array would have changed
+        // var pos = orgnLen + 3;
+        var pos = orgnLen + 1;
+
         return BitConverter.ToInt16(aValue.Slice(pos));
     }
 
