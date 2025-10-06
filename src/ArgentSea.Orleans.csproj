@@ -10,7 +10,10 @@
 	<Copyright>© John Hicks</Copyright>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	<Version>2.0.0-prerelease-7</Version>
-	<Title>ArgentSea core library for Microsoft Orleans persistence</Title>
+    <Title>ArgentSea core library for Microsoft Orleans persistence</Title>
+	<Description>Abstrations which enable ArgentSea to serve as a data provider for Microsoft Orleans.</Description>
+	<PackageIcon>argentsea-logo.png</PackageIcon>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
 	<PropertyGroup>
@@ -23,6 +26,7 @@
     <PackageReference Include="Microsoft.Orleans.Runtime" Version="9.1.2" />
     <PackageReference Include="Microsoft.Orleans.Sdk" Version="9.1.2" />
 	<None Include="readme.md" Pack="true" PackagePath="\" />
+	<None Include="argentsea-logo.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
   <ItemGroup>
