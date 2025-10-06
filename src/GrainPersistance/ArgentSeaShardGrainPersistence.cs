@@ -1,28 +1,13 @@
 ﻿// © John Hicks. All rights reserved. Licensed under the MIT license.
 // See the LICENSE file in the repository root for more information.
 
-using System;
-using Orleans.Storage;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Orleans.Configuration;
-using ArgentSea.Orleans;
+using Orleans.Storage;
 using System.Collections.Concurrent;
-using Orleans;
-using System.Linq.Expressions;
-using System.Reflection;
-using Newtonsoft.Json;
-using System.Xml.Linq;
-using System.Runtime.CompilerServices;
-using System.Collections;
-using Orleans.Runtime;
-using System.Data.Common;
 using System.Data;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace ArgentSea.Orleans
 {
@@ -45,18 +30,18 @@ namespace ArgentSea.Orleans
 
         public ArgentSeaShardGrainPersistence(
             ShardSetsBase<TShardOptions> shards,
-            IOptions<OrleansShardPersistenceOptions> orleansOptions, 
-            IOptions<ClusterOptions> clusterOptions, 
+            OrleansShardPersistenceOptions orleansOptions,
+            ClusterOptions clusterOptions,
             ILogger<ArgentSeaShardGrainPersistence<TShardOptions>>? logger)
         {
-            var shardSetKey = orleansOptions.Value.ShardSetKey;
+            var shardSetKey = orleansOptions.ShardSetKey;
             this.name = shardSetKey;
             this.shards = shards[shardSetKey];
-            this.queryDefinitions = orleansOptions.Value.Queries;
-            this.serviceId = clusterOptions.Value.ServiceId;
+            this.queryDefinitions = orleansOptions.Queries;
+            this.serviceId = clusterOptions.ServiceId;
             this.logger = logger;
             //this.initStage = orleansOptions.Value.InitStage;
-            this.validateGrainKeys = orleansOptions.Value.ValidateGrainKeys;
+            this.validateGrainKeys = orleansOptions.ValidateGrainKeys;
         }
 
         //public void Participate(ISiloLifecycle observer)
@@ -96,7 +81,7 @@ namespace ArgentSea.Orleans
                 else
                 {
                     grainState.State = Activator.CreateInstance<TModel>();
-                    var lazySetShard = _setShardLambda.GetOrAdd(grainType, new Lazy<Delegate> (() => OrleansExpressionHelper.BuildSetShardLambda<TModel>(grainType, this.logger), LazyThreadSafetyMode.ExecutionAndPublication));
+                    var lazySetShard = _setShardLambda.GetOrAdd(grainType, new Lazy<Delegate>(() => OrleansExpressionHelper.BuildSetShardLambda<TModel>(grainType, this.logger), LazyThreadSafetyMode.ExecutionAndPublication));
                     if (lazySetShard.IsValueCreated)
                     {
                         logger?.OrleansDbCacheHit(grainType);
