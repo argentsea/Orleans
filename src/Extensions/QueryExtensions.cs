@@ -1,6 +1,4 @@
-﻿using ArgentSea;
-using ArgentSea.ShardKeys;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using ArgentSea.ShardKeys;
 
 namespace ArgentSea.Orleans;
 
@@ -14,7 +12,8 @@ public static class QueryExtensions
     public static short ShardId(this GrainId grainId)
     {
         var gk = new GhostShardKey(grainId.Key.Value);
-        return gk.GetShardId();
+        var shardKey = gk.GetShardId();
+        return shardKey;
     }
 
 }
