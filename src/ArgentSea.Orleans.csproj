@@ -9,7 +9,7 @@
     <Description>This library depends on the core ArgentSea library and provides extensions to allow it to provide storage services to Microsoft Orleans..</Description>
 	<Copyright>© John Hicks</Copyright>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Version>2.0.0-prerelease-8</Version>
+	<Version>2.0.0-prerelease-9</Version>
     <Title>ArgentSea core library for Microsoft Orleans persistence</Title>
 	<Description>Abstrations which enable ArgentSea to serve as a data provider for Microsoft Orleans.</Description>
 	<PackageIcon>argentsea-logo.png</PackageIcon>

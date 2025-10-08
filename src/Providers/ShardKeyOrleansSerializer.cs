@@ -50,6 +50,12 @@ public class ShardKeyOrleansSerializer<T> : IFieldCodec<ShardKey<T>>, IDeepCopie
     }
 }
 
+/// <summary>
+/// This class registers a ShardKey&lt;T, Y&gt; type with Orleans.
+/// This must be loaded at startup with a singleton instance for every type that is in use in the Orleans application.
+/// </summary>
+[RegisterSerializer]
+[RegisterCopier]
 public class ShardKeyOrleansSerializer<TShard, TChild> : IFieldCodec<ShardKey<TShard, TChild>>, IDeepCopier<ShardKey<TShard, TChild>> where TShard : IComparable where TChild : IComparable
 {
     public ShardKey<TShard, TChild> DeepCopy(ShardKey<TShard, TChild> input, CopyContext context)
@@ -87,6 +93,12 @@ public class ShardKeyOrleansSerializer<TShard, TChild> : IFieldCodec<ShardKey<TS
     }
 }
 
+/// <summary>
+/// This class registers a ShardKey&lt;T, T, T&gt; type with Orleans.
+/// This must be loaded at startup with a singleton instance for every type that is in use in the Orleans application.
+/// </summary>
+[RegisterSerializer]
+[RegisterCopier]
 public class ShardKeyOrleansSerializer<TShard, TChild, TGrandChild> : IFieldCodec<ShardKey<TShard, TChild, TGrandChild>>, IDeepCopier<ShardKey<TShard, TChild, TGrandChild>> where TShard : IComparable where TChild : IComparable where TGrandChild : IComparable
 {
     public ShardKey<TShard, TChild, TGrandChild> DeepCopy(ShardKey<TShard, TChild, TGrandChild> input, CopyContext context)
@@ -124,6 +136,12 @@ public class ShardKeyOrleansSerializer<TShard, TChild, TGrandChild> : IFieldCode
     }
 }
 
+/// <summary>
+/// This class registers a ShardKey&lt;T, T, T, T&gt; type with Orleans.
+/// This must be loaded at startup with a singleton instance for every type that is in use in the Orleans application.
+/// </summary>
+[RegisterSerializer]
+[RegisterCopier]
 public class ShardKeyOrleansSerializer<TShard, TChild, TGrandChild, TGreatGrandChild> : IFieldCodec<ShardKey<TShard, TChild, TGrandChild, TGreatGrandChild>>, IDeepCopier<ShardKey<TShard, TChild, TGrandChild, TGreatGrandChild>> where TShard : IComparable where TChild : IComparable where TGrandChild : IComparable where TGreatGrandChild : IComparable
 {
     public ShardKey<TShard, TChild, TGrandChild, TGreatGrandChild> DeepCopy(ShardKey<TShard, TChild, TGrandChild, TGreatGrandChild> input, CopyContext context)
