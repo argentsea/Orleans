@@ -147,7 +147,7 @@ namespace ArgentSea.Orleans
 
         public Query ClearQuery
         {
-            get => (Query?)this.readQuery ?? (Query?)this.lazyReadQuery?.Value ?? throw new OrleansQueryNotProvidedException(this.grainType);
+            get => (Query?)this.clearQuery ?? (Query?)this.lazyClearQuery?.Value ?? throw new OrleansQueryNotProvidedException(this.grainType);
         }
 
         public string GrainType { get => this.grainType; }
@@ -282,7 +282,7 @@ namespace ArgentSea.Orleans
 
         public Query ClearQuery
         {
-            get => (Query?)this.readQuery ?? (Query?)this.lazyReadQuery?.Value ?? throw new OrleansQueryNotProvidedException(this.grainType);
+            get => (Query?)this.clearQuery ?? (Query?)this.lazyClearQuery?.Value ?? throw new OrleansQueryNotProvidedException(this.grainType);
         }
 
         public string GrainType { get => this.grainType; }
