@@ -126,6 +126,7 @@ namespace ArgentSea.Orleans
                 .CreateInputParameters<TModel>(grainState.State, this.logger);
 
             await this.database.Write.RunAsync(queries.WriteQuery, prms, CancellationToken.None);
+            grainState.RecordExists = true;
             var elapsedMS = (long)((Stopwatch.GetTimestamp() - startTimestamp) * TimestampToMilliseconds);
             this.logger?.TraceDbWriteCmdExecuted(grainType, elapsedMS);
         }

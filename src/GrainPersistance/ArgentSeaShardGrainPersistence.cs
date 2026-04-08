@@ -166,6 +166,7 @@ namespace ArgentSea.Orleans
 
 
             await this.shards[shardId].Write.RunAsync(queries.WriteQuery, prms, CancellationToken.None);
+            grainState.RecordExists = true;
             var elapsedMS = (long)((Stopwatch.GetTimestamp() - startTimestamp) * TimestampToMilliseconds);
             this.logger?.TraceShardWriteCmdExecuted(shardId, grainType, elapsedMS);
         }
@@ -192,7 +193,7 @@ namespace ArgentSea.Orleans
             {
                 logger?.OrleansShardCacheMiss(grainType);
             }
-            var lzy = (Func<ReadOnlyMemory<byte>, object, ParameterCollection, ILogger?, short>)lazyShardIdAndParams.Value;
+            var lzy = (Func<ReadOnlyMemory<byte>, TModel, ParameterCollection, ILogger?, short>)lazyShardIdAndParams.Value;
             var shardId = lzy(grainId.Key.Value, grainState.State, prms, this.logger);
 
             await this.shards[shardId].Write.RunAsync(queries.ClearQuery, prms, CancellationToken.None);
